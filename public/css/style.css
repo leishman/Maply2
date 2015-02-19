@@ -1,11 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+.body-container {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* Navbar */
+
+.nav {
+  height: 50px;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  background: black;
+  color: white;
+}
+
+.nav-buttons li {
+  display: inline-block;
+  padding: 0 5px;
+  list-style-type: none;
+}
+
+.nav-buttons a {
+  text-decoration: none;
+  color: white;
+}
+
+
+.app-container {
+  height: 100%;
+  margin-top: 50px;
+  padding-top: 10px;
+}
+
+.container {
+  width: 900px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* WorldMap */
+
 #map {
   width: 100%;
   height: 100%;
+  margin: 0 auto;
 }
 
 .land {
   fill: rgb(117, 87, 57);
-  stroke-opacity: 1;
+  opacity: 0.7;
 }
 
 .ocean {
@@ -18,4 +67,114 @@
 
 .active {
   fill: orange;
+}
+
+/* Country */
+
+.sidenav {
+  width: 200px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 50px;
+}
+
+.sidenav-buttons {
+  list-style-type: none;
+}
+
+.country {
+  margin-left: 200px;
+}
+
+/* Country News */
+
+.country-news {
+  width: 600px;
+}
+
+
+/* Loading Animation */
+
+.loader-container {
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content:center;
+  width:100%;
+}
+
+.loader-container svg {
+  max-width:100%;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loader {
+  animation: spin 1s ease-in-out infinite alternate both;
+  height: 100px;
+  position: relative;
+  width: 100px;
+}
+.loader svg:not(#circle-middle) {
+  animation: spin 1s ease-in-out infinite alternate both;
+  position: absolute;
+  top: -50%;
+  left: 0;
+  transform-origin: bottom center;
+}
+
+.loader svg:nth-of-type(1):not(#circle-middle) {
+  transform: rotate(30deg);
+}
+
+.loader svg:nth-of-type(2):not(#circle-middle) {
+  transform: rotate(60deg);
+}
+
+.loader svg:nth-of-type(3):not(#circle-middle) {
+  transform: rotate(90deg);
+}
+
+.loader svg:nth-of-type(4):not(#circle-middle) {
+  transform: rotate(120deg);
+}
+
+.loader svg:nth-of-type(5):not(#circle-middle) {
+  transform: rotate(150deg);
+}
+
+.loader svg:nth-of-type(6):not(#circle-middle) {
+  transform: rotate(180deg);
+}
+
+.loader svg:nth-of-type(7):not(#circle-middle) {
+  transform: rotate(210deg);
+}
+
+.loader svg:nth-of-type(8):not(#circle-middle) {
+  transform: rotate(240deg);
+}
+
+.loader svg:nth-of-type(9):not(#circle-middle) {
+  transform: rotate(270deg);
+}
+
+.loader svg:nth-of-type(10):not(#circle-middle) {
+  transform: rotate(300deg);
+}
+
+.loader svg:nth-of-type(11):not(#circle-middle) {
+  transform: rotate(330deg);
+}
+
+.loader svg:nth-of-type(12):not(#circle-middle) {
+  transform: rotate(360deg);
+}
+
+.loader svg:nth-of-type(13):not(#circle-middle) {
+  transform: rotate(390deg);
 }

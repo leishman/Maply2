@@ -1,28 +1,75 @@
 var React = require('react');
 var d3 = require('d3');
 var topojson = require('topojson');
-var CountryListActions = require('../actions/CountryListActions')
+var MapDataActions = require('../actions/MapDataActions');
+var Navigation = require('react-router').Navigation;
+var MapDataStore = require('../stores/MapDataStore');
+var _ = require('lodash');
+
+MapDataActions.load();
+
+var onClickGlobal;
+
+function getState() {
+  return {
+    mapData: MapDataStore.getAll()
+  }
+}
 
 var WorldMap = React.createClass({
+  mixins: [Navigation],
+
+  getInitialState: function() {
+    return getState();
+  },
+
+  componentWillMount: function() {
+    onClickGlobal = this._onClick
+  },
+
   componentDidMount: function() {
-    drawGlobe();
+    MapDataStore.addChangeListener(this._onChange);
+    this._renderMap();
   },
 
   componentWillUnmount: function() {
-    
+    MapDataStore.removeChangeListener(this._onChange);
+  },
+
+  componentDidUpdate: function() {
+    var mapData = this.state.mapData;
+
+    if (!_.isEmpty(mapData)) {
+      this._renderMap(mapData);
+    }
   },
 
   render: function() {
     return (
       <div id="map"></div>
     );
+  },
+
+  _onClick: function(h) {
+    var snakeName = _.snakeCase(h.properties.name);
+    this.transitionTo('countries', { country: snakeName })
+  },
+
+  _onChange: function() {
+    this.setState(getState());
+  },
+
+  _renderMap: function() {
+    var mapData = this.state.mapData;
+    if (Object.keys(mapData).length > 0) {
+      renderMap(mapData);
+    }
   }
 });
 
-
-function drawGlobe() {
-
-  var width = 1200;
+function renderMap(data) {
+  // debugger
+  var width = 900;
   var height = 800;
   sens = 0.25;
 
@@ -53,35 +100,6 @@ function drawGlobe() {
     // bind Drag events for ocean clicks
     .call(bindDrag());
 
-
-  // var g = svg.append('g');
-
-  d3.json('/data/world.topo.json', function(err, data) {
-    if(err) return console.log(err);
-
-      // generate SVG elements for each country
-      g.selectAll('path')
-        .data(topojson.feature(data, data.objects.world).features)
-      .enter().append('path')
-        .attr('d', path)
-        .attr('class', 'land')
-
-      // bind Drag events for country clicks
-      .call(bindDrag())
-        .on('mouseover', hover)
-        .on('dblclick', click)
-
-    function hover(h) {
-      svg.selectAll('path')
-        .classed('active', function(d) { return h === d })
-    }
-
-    function click(h) {
-      // TODO figure out how to move this into component
-      CountryListActions.create(h.properties);
-    }
-  });
-
   function bindDrag() {
     return d3.behavior.drag()
       .origin(function() {
@@ -92,8 +110,31 @@ function drawGlobe() {
         var rotate = projection.rotate();
         projection.rotate([d3.event.x * sens, -d3.event.y * sens, rotate[2]])
         svg.selectAll('path.land').attr('d', path);
-      })
+      });
   }
-}
+
+  // generate SVG elements for each country
+  g.selectAll('path')
+    .data(topojson.feature(data, data.objects.world).features)
+  .enter().append('path')
+    .attr('d', path)
+    .attr('class', 'land')
+
+  // bind Drag events for country clicks
+  .call(bindDrag())
+    .on('mouseover', hover)
+    .on('click', click);
+
+  function hover(h) {
+    svg.selectAll('path')
+      .classed('active', function(d) { return h === d })
+  }
+
+  function click(h) {
+    onClickGlobal(h);
+  }
+};
+
+
 
 module.exports = WorldMap;

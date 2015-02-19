@@ -1,6 +1,7 @@
-
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  MAP_COUNTRY_VISIT: null
+  LOAD_MAP_DATA: null,
+  LOAD_MAP_DATA_SUCCESS: null,
+  LOAD_MAP_DATA_FAIL: null
 });

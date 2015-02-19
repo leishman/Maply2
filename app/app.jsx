@@ -7,29 +7,36 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 
-var MaplyApp = require ('./components/MaplyApp.jsx');
+var WorldMap = require ('./components/WorldMap.jsx');
+var Country = require ('./components/Country.jsx');
+var CountryNews = require ('./components/CountryNews.jsx');
 var About = require ('./components/About.jsx');
 
 var App = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <header>
-          <ul>
-            <li><Link to="home">Home</Link></li>
+      <div className="body-container">
+        <nav className="nav">
+          <ul className="nav-buttons">
+            <li><Link to="/">Home</Link></li>
             <li><Link to="about">About</Link></li>
           </ul>
-        </header>
-        <RouteHandler/>
+        </nav>
+        <div className="app-container">
+          <RouteHandler/>
+        </div>
       </div>
     );
   }
 });
 
 var routes = (
-  <Route name="app" path="/" handler={App} location="history">
-    <Route name="home" handler={MaplyApp}/>
+  <Route handler={App} location="history">
+    <DefaultRoute handler={WorldMap}/>
+    <Route name="countries" path="countries/:country" handler={Country}>
+      <Route name="country_news" path="news" handler={CountryNews}/>
+    </Route>
     <Route name="about" handler={About}/>
   </Route>
 );
